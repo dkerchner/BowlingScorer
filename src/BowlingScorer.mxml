@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" minWidth="955" minHeight="600" width="748" height="100%" name="Bowling Game Score Calculator">
+	<mx:Script>
+		<![CDATA[
+			import BowlingScorer.controllers.BowlingScoreController;			
+			import BowlingScorer.models.BowlingScoreResult;
+			
+			import mx.controls.Alert;
+			
+			/*
+			 * Application: BowlingScorer
+			 * Developer:  Dominic Kerchner
+			 * Date: 09/07/2010
+			 * 
+			 * FileName: BowlingScorer.mxml
+			 * 
+			 * Description: This application accepts a string of of bowling frame scores form
+			 *				fields and calculates a total score for the game. There are exaple 
+			 *				scores in the radio button group as well as a text field to type/paste in
+			 *				a formatted set of frame scores.
+			 * 
+			 */			
+			
+			// Some constants for the example scores
+			private static const TEST_FRAMES_PERFECT_GAME : String = "X-X-X-X-X-X-X-X-X-X-XX";
+			private static const TEST_FRAMES_1 : String = "45-54-36-27-09-63-81-18-90-72";
+			private static const TEST_FRAMES_2: String = "5/-5/-5/-5/-5/-5/-5/-5/-5/-5/-5";
+			
+			/* Function: handleFramesInput
+			*  Purpose: Calculates the total score of a bowling game given a formatted input of frame scores. Triggered by pressing the "Calculate" button.
+			*  Parameters: None
+			*/
+			public function framesInputHandler():void
+			{
+				var scores : String = "";
+
+				// If the string input is used, grab the text. Otherwise use the value of the radio option selected
+				if (framesInput.selected) {
+					scores = framesInputText.text;			
+				} else { 
+					scores = frameScores.selectedValue.toString();
+				}
+				
+				var controller:BowlingScoreController = new BowlingScoreController();
+				var result:BowlingScoreResult = controller.calculateBowlingScore(scores);
+				
+				Alert.show("The score is " + result.getBowlingScoreResult().toString() + ".", "Calculated Bowling Score");
+			}
+			
+
+		]]>
+	</mx:Script>
+	
+	<!-- TODO: Separate this into a component. -->
+	<mx:Canvas width="100%" height="100%" id="frameInput">
+		<mx:VBox width="100%" height="100%" verticalGap="0" id="vbox1">
+			<mx:HBox width="100%">
+				<mx:Panel styleName="Group" id="frameScoreInput" title="Bowling Game Score Calculator" width="100%" height="100%">
+					<mx:RadioButtonGroup id="frameScores"/>
+						<mx:RadioButton id="testFramesPerfectGame" groupName="frameScores" label="Perfect Game (X-X-X-X-X-X-X-X-X-X-XX)" value="{TEST_FRAMES_PERFECT_GAME}"/>						
+						<mx:RadioButton id="testFrames1" groupName="frameScores" label="Frames 1 (45-54-36-27-09-63-81-18-90-72)" value="{TEST_FRAMES_1}"/>
+						<mx:RadioButton id="testFrames2" groupName="frameScores" label="Frames 2 (5/-5/-5/-5/-5/-5/-5/-5/-5/-5/-5)" value="{TEST_FRAMES_2}"/>
+						<mx:HBox>
+							<mx:RadioButton id="framesInput" groupName="frameScores" label="Input Frames"/>
+							<mx:TextArea id="framesInputText" width="270" enabled="{framesInput.selected}" height="22"/>
+						</mx:HBox>
+						<mx:Button label="Calculate" styleName="OkButton" click="framesInputHandler()"/>
+				</mx:Panel>
+				
+			</mx:HBox>
+		</mx:VBox>
+		
+		
+	</mx:Canvas>
+</mx:Application>
